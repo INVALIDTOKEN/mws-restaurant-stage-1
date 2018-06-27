@@ -178,7 +178,20 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
+  li.append(more);
+
+  // [ADDED]
+  const fontAwesomeIcon = document.createElement("i");
+  fontAwesomeIcon.className = "fas fa-arrow-right";
+  fontAwesomeIcon.style.color = "#079642";
+  more.appendChild(fontAwesomeIcon);
+  // Event listeners for the more anker element more
+  more.addEventListener("mouseenter", (event)=>{
+    fontAwesomeIcon.style.color = "white";
+  });
+  more.addEventListener("mouseleave", (event)=>{
+    fontAwesomeIcon.style.color = "#079642";
+  });
 
   return li
 }
