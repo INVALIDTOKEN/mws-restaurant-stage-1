@@ -1,0 +1,461 @@
+/* ==============================
+========== Base styles ==========
+=================================*/
+
+/* Header color =  #2c3e50 */
+/* <i class="fas fa-arrow-circle-right"></i> */
+/* [TODO] REDUCE THE HEIGHT OF MAP IN SMALLER SCREENS */
+/* [TODO] CHECK AGAIN - THE FONT-SIZE OF THE FOOTER MUST BE RESPONSIVE */
+
+*{
+  box-sizing: border-box;
+  outline: none;
+}
+
+body,
+html{
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+body,td,th{
+  font-family: 'Roboto', sans-serif;
+  font-size : 16px;
+  line-height: 1.15;
+  color: black;
+  background-color: #f4f4f4
+}
+
+.container{
+  width: 95%;
+  margin: 0px auto;
+}
+
+/* You can delete this after completing the page */
+h1, p, h2, h3, ul{
+  margin: 0px;
+  padding: 0px;
+}
+
+ul{
+  list-style: none;
+}
+
+a{
+  text-decoration: none;
+  display: block;
+}
+
+
+/* ================================
+========== header styles ==========
+=================================*/
+
+header{
+  width: 100%;
+}
+
+nav {
+  width: 100%;
+  height: 70px;
+  background-color:   #2c3e50;
+  /* font-family: 'Concert One', cursive; */
+  font-family: 'Quicksand', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nav a{
+  color: white;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+#maincontent{
+  width: 100%;
+}
+
+/* [TODO] Main content styles */
+/* ====================== Map ====================== */
+#map {
+  height: 400px;
+  width: 100%;
+  background-color: black;
+}
+/* ==================== work up here =============== */
+
+
+/* =========================================
+========== filter-options styles ==========
+==========================================*/
+
+.restaurant-showcase{
+  width: 100%;
+}
+
+.filter-options{
+  width: 100%;
+  background-color: #2c3e50;
+  padding: 10px 0 15px 0;
+  color: white;
+}
+
+.filter-options-content select{
+  display: block;
+  font-size: 20px;
+  width: 100%;
+  padding: 7px;
+}
+
+.filter-options-header h1{
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 24px;
+  color: #d35400;
+}
+
+.filter-options-content select:first-child{
+  margin-bottom: 10px;
+}
+
+/* ========================================
+========= Restaurants list style ==========
+===========================================*/
+
+#restaurants-list{
+  width: 100%;
+  margin-top: 15px;
+  max-width: 1300px;
+  margin: 15px auto;
+}
+
+#restaurants-list li{
+  background-color:  #ffffff;
+  color: black;
+  margin : 10px 0;
+  border-radius: 5px;
+}
+
+#restaurants-list img{
+  padding: 15px 15px 0px 15px;
+  display: block;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+/* GIVING STYLES TO THE CONTENT OF LI */
+#restaurants-list h1{
+  font-size: 20px;
+  padding: 10px 15px;
+}
+
+#restaurants-list p{
+  padding: 0 15px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 14px;
+  color:#808080;
+}
+
+/* GIVING A LINK BUTTON STYLES */
+#restaurants-list i {
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+  color:   #079642;
+}
+
+#restaurants-list a {
+  border-radius: 0px 0px 5px 5px;
+  text-align: right;
+  display: inline-block;
+  border-top: 1px solid rgba(72,72,72, 0.5);
+  color:   #079642;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 10px;
+  font-size: 19px;
+
+}
+
+/* [TODO] Add hover styles in javascript */
+#restaurants-list a:hover{
+  background-color: #079642;
+  color: white;
+}
+
+/* ================================
+========== Footer Styles ==========
+=================================*/
+
+#footer{
+  width: 100%;
+  height: 65px;
+  background-color: #2c3e50;
+  font-family: 'Montserrat', sans-serif;
+  
+  font-size: 12px;
+  color: white;
+}
+
+#footer div{
+  padding: 5px;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#footer a{
+  margin: 0 5px;
+  color: #d35400;
+}
+
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* /myRestaurant.html styles */
+
+/* ======================================
+========== breadcrumb styles ===========
+======================================*/
+
+#breadcrumb{
+  display: flex;
+  padding: 5px 0;
+  font-weight: bold;
+}
+
+#breadcrumb a{
+  color: #d35400;
+}
+
+li#separateLinks{
+  margin: 0 7px;
+}
+
+.gap{
+  height: 2px;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 96%;
+  margin: 20px auto;
+}
+
+/* ===============================================
+========== restaurant container styles ===========
+=================================================*/
+
+#restaurant-container{
+  width: 95%;
+  margin: 0 auto;
+}
+
+#restaurant-name{
+  font-size: 30px;
+  margin-top: 10px;
+  font-weight: normal;
+  color:  #d35400;
+}
+
+#restaurant-cuisine{
+  padding: 5px 0px;
+  background-color: #2c3e50;
+  font-size: 20px;
+  margin: 10px 0px 0px 0px;
+  color: white;
+  text-align: center;
+}
+
+#restaurant-img{
+  border-top: 7px solid #d35400;
+  width: 100%;
+}
+#restaurant-address{
+  margin: 5px 0px;
+  color: black;
+}
+
+#restaurant-hours{
+  padding-left: 5px;
+}
+
+#restaurant-hours td{
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 12px;
+}
+
+
+/* =====================================
+========== reviews-container ==========
+======================================*/
+
+#reviews-container h2{
+  padding: 10px;
+  width: 85%;
+  text-align: right;
+  background-color:  #00bf8f;
+  color: #2c3e50;
+  max-width: 600px;
+  border-bottom: 5px solid #2c3e50;
+}
+
+#reviews-list li{
+  background-color: white;
+  width: calc(100% - 10px);
+  border: 0.5px solid rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  color: darkslategray;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 5px;
+  padding: 10px;
+  word-spacing: 2px; 
+}
+
+#reviews-list li p:first-child{
+  line-height: 1.4;
+  font-size: 20px;
+  color: black;
+  padding: 4px 0px;
+}
+
+#reviews-list li p:nth-child(2){
+  line-height: 1.4;
+  color: #079642;
+}
+
+#reviews-list li p:nth-child(3){
+  margin-bottom: 5px;
+  color: #079642;
+}
+
+
+
+
+/* ================================
+========== Media queries ==========
+=================================*/
+
+@media screen and (min-width : 361px){
+  /* ========= Just to change the font-size of the header ============== */
+  nav a{
+    font-size: 27px;
+  }
+}
+
+/* MAJOR BREAKPOINT */
+@media screen and (min-width : 576px){
+  /* Changing the font size on larger screen */
+  /* ============= nav styles ============== */
+  nav a{
+    font-size: 35px;
+    letter-spacing: 5px;
+  }
+
+  /* ============= filter-options styles ============= */
+
+  .filter-options-content{
+    display: flex;
+    justify-content: center;
+  }
+
+  .filter-options-content select {
+    max-width: 400px;
+  }
+
+  .filter-options-content select:first-child{
+    margin: 0 5px 0 0;
+  }
+
+}
+
+/* MAJOR BREAKPOINT */
+@media screen and (min-width : 656px){
+  /* ========= Making restaurant-list a grid with two columns======= */
+  #restaurants-list li{
+    margin: 0px 0px;
+  }
+  #restaurants-list{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px 5px;
+  }
+}
+
+@media screen and (min-width : 767px){
+  .container{
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  #grid-container{
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+  }
+
+  #restaurant-container { 
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0px 10px;
+  }
+
+  .restaurant-location{
+    height: 100%;
+  }
+
+  #restaurant-name{
+    margin-top: 0px;
+  }
+
+  #restaurant-hours td{
+    font-size: 14px;
+  }
+
+  #footer{
+    font-size: 16px;
+  }
+}
+
+/* MAJOR BREAKPOINT */
+@media screen and (min-width : 920px){
+  #restaurants-list{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px 10px;
+  }
+
+  #grid-container{
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+@media screen and (min-width : 1120px){
+
+  /* =========== Increasing the width of the gutters in the restaurants grid=========== */
+  #restaurants-list{
+    border: 1px solid #D2D7D3 ;
+    grid-gap: 12px 12px;
+    padding: 10px; 
+  }
+
+  #grid-container{
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
