@@ -4,7 +4,6 @@
 
 /* Header color =  #2c3e50 */
 /* <i class="fas fa-arrow-circle-right"></i> */
-/* [TODO] REDUCE THE HEIGHT OF MAP IN SMALLER SCREENS */
 /* [TODO] CHECK AGAIN - THE FONT-SIZE OF THE FOOTER MUST BE RESPONSIVE */
 
 *{
@@ -82,9 +81,8 @@ nav a{
 /* [TODO] Main content styles */
 /* ====================== Map ====================== */
 #map {
-  height: 400px;
+  height: 300px;
   width: 100%;
-  background-color: black;
 }
 /* ==================== work up here =============== */
 
@@ -246,6 +244,7 @@ li#separateLinks{
   margin: 20px auto;
 }
 
+/* restaurant route styles */
 /* ===============================================
 ========== restaurant container styles ===========
 =================================================*/
@@ -253,11 +252,13 @@ li#separateLinks{
 #restaurant-container{
   width: 95%;
   margin: 0 auto;
+  border-top : 2px solid #2c3e50;
+  margin-top: 10px;
+  padding-top: 10px;
 }
 
 #restaurant-name{
   font-size: 30px;
-  margin-top: 10px;
   font-weight: normal;
   color:  #d35400;
 }
@@ -275,6 +276,7 @@ li#separateLinks{
   border-top: 7px solid #d35400;
   width: 100%;
 }
+
 #restaurant-address{
   margin: 5px 0px;
   color: black;
@@ -304,17 +306,25 @@ li#separateLinks{
   border-bottom: 5px solid #2c3e50;
 }
 
+#reviews-list{
+  margin : 20px 0;
+}
+
 #reviews-list li{
   background-color: white;
   width: calc(100% - 10px);
+
   border: 0.5px solid rgba(0,0,0,0.2);
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+
   color: darkslategray;
   font-size: 12px;
-  line-height: 1.6;
-  margin: 10px 5px;
+
+  margin: 0px 5px 10px;
   padding: 10px;
+
   word-spacing: 2px; 
+  line-height: 1.6;
 }
 
 #reviews-list li p:first-child{
@@ -357,6 +367,11 @@ li#separateLinks{
     letter-spacing: 5px;
   }
 
+  #map {
+    height: 400px;
+    width: 100%;
+  }
+
   /* ============= filter-options styles ============= */
 
   .filter-options-content{
@@ -372,6 +387,10 @@ li#separateLinks{
     margin: 0 5px 0 0;
   }
 
+  /* restaurant route styles */
+  #restaurant-hours td{
+    font-size: 13px;
+  }
 }
 
 /* MAJOR BREAKPOINT */
@@ -385,6 +404,22 @@ li#separateLinks{
     grid-template-columns: 1fr 1fr;
     grid-gap: 5px 5px;
   }
+
+  /* restaurant route styles */
+
+  /* restaurant-list styles */
+  #reviews-list li{
+    font-size: 14px;
+  }
+
+  /* restaurant-container styles */
+  #restaurant-hours td{
+    font-size: 14px;
+  }
+
+  #restaurant-address{
+    font-size: 21px;
+  }
 }
 
 @media screen and (min-width : 767px){
@@ -393,32 +428,51 @@ li#separateLinks{
     margin: 0 auto;
   }
 
+  #footer{
+    font-size: 16px;
+  }
+
+  /* Restaurant route styles */
   #grid-container{
     display: grid;
     grid-template-columns: 1fr 1.2fr;
   }
 
+  .inside #map{
+    height: 100%;
+  }
+
+  /* restaurant-container elements*/
+
   #restaurant-container { 
-    max-width: 500px;
     margin: 0 auto;
     width: 100%;
     padding: 0px 10px;
-  }
-
-  .restaurant-location{
-    height: 100%;
+    border-top : 0px;
   }
 
   #restaurant-name{
     margin-top: 0px;
   }
 
-  #restaurant-hours td{
-    font-size: 14px;
+  #restaurant-address{
+    font-size: 22px;
+    margin: 7px 0;
   }
 
-  #footer{
-    font-size: 16px;
+  #restaurant-hours td{
+    font-size: 14.5px;
+  }
+
+  /* restaurant list elements */
+  #reviews-list {
+    display: flex;
+    flex-wrap: wrap;  
+  }
+
+  #reviews-list li{
+    flex: 1 calc((100% - 20px)/2);
+    margin: 5px;
   }
 }
 
@@ -430,8 +484,13 @@ li#separateLinks{
     grid-gap: 10px 10px;
   }
 
+  /* restaurant route styles */
   #grid-container{
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 1.1fr 1fr;
+  }
+
+  #reviews-list li{
+    font-size: 15px;  
   }
 }
 
@@ -444,8 +503,18 @@ li#separateLinks{
     padding: 10px; 
   }
 
+  /* restaurant route styles */
   #grid-container{
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1.3fr 1fr;
+  }
+
+  #reviews-list li{
+    flex: 1 calc((100% - 30px)/3);
+    margin: 5px;
+  }
+
+  #reviews-list li{
+    font-size: 15.5px;  
   }
 
 }
