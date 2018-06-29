@@ -283,12 +283,13 @@ li#separateLinks{
 }
 
 #restaurant-address{
-  margin: 5px 0px;
+  margin: 10px 0px 5px;
   color: black;
 }
 
-#restaurant-hours{
-  padding-left: 5px;
+#restaurant-hours tr{
+  display: block;
+  margin-bottom: 3px;
 }
 
 #restaurant-hours td{
