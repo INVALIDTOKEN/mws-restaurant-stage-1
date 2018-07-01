@@ -1,4 +1,4 @@
-console.log("Service Worker File Starts Executing! [changed]");
+console.log("Service Worker File Starts Executing!");
 
 let cacheName = "restaurant-cache-v1";
 let cacheVersion = cacheName.substr(-2, 2);
@@ -65,6 +65,6 @@ self.addEventListener("activate", (event)=>{
   );
 });
 
-console.log("Service Worker File Ended Executing");
+console.log("Service Worker File Ended Executing! All the Event Listeners are set.");
 
 

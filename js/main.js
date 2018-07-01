@@ -1,9 +1,9 @@
 console.log("main.js Started Running.");
 let restaurants,
   neighborhoods,
-  cuisines
-var newMap
-var markers = []
+  cuisines;
+var newMap;
+var markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -234,4 +234,39 @@ if(navigator.serviceWorker){
     console.log(error);
   });
 }
+
+// Adding a UI element for notificying the user that an update is available.
+let notifyUserHTML = function (){
+  let body = document.getElementsByTagName("body")[0];
+
+  let outerDiv = document.createElement("div");
+  outerDiv.id = "notifyUser";
+
+  let h2 = document.createElement("h2");
+  h2.textContent = "Update Available";
+  h2.id = "notifyMsg"
+
+  outerDiv.appendChild(h2);
+
+  let ignoreButton = document.createElement("button");
+  ignoreButton.type = "button";
+  ignoreButton.id = "ignoreUpdate";
+  ignoreButton.textContent = "Ignore";
+
+  let installButton = document.createElement("button");
+  installButton.type = "button";
+  installButton.id = "installUpdate";
+  installButton.textContent = "Install";
+
+  let innerDiv = document.createElement("div");
+  innerDiv.id = "notifyButtons"
+  innerDiv.appendChild(ignoreButton);
+  innerDiv.appendChild(installButton);
+
+  outerDiv.appendChild(innerDiv);
+
+  body.appendChild(outerDiv);
+}
+
+notifyUserHTML();
 
