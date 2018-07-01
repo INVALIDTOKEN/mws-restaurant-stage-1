@@ -1,3 +1,4 @@
+console.log("main.js Started Running.");
 let restaurants,
   neighborhoods,
   cuisines

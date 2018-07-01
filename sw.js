@@ -1,23 +1,32 @@
-console.log("Service Worker File Starts Executing! [changed]");
+console.log("Service Worker File Starts Executing!");
 
-self.addEventListener("fetch", (event)=>{
-  event.respondWith(
-    fetch(event.request)
-    .then((response)=>{
-      console.log(response.status);
-      if(response.status === 404){
-        return new Response("Woop not found");
-      }else{
-        
-        return response;
-
-      }
+self.addEventListener("install", (event)=>{
+  event.waitUntil(
+    caches.open("restaurant-cache-v1")
+    .then((cache)=>{
+      return cache.add("/css/myStyles.css");
     })
-    .catch((error)=>{return new Response("Woop error in fetching something.")})
+    .catch((error)=>{
+      return error;
+    })
   );
 });
 
+self.addEventListener("fetch", (event)=>{
+  if(event.request.url === "http://localhost:8000/css/myStyles.css"){
+    event.respondWith(
+      caches.open("restaurant-cache-v1")
+      .then((cache)=>{
+        return cache.match("/css/myStyles.css").then((response)=>{
+          console.log("Giving custom response");
+          return response;
+        });
+      })
+    );  
+  }
+});
 
-console.log("Service Worker File Ended Executing [changed]");
+
+console.log("Service Worker File Ended Executing");
 
 
