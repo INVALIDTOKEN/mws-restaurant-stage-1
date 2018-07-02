@@ -223,12 +223,70 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 } */
 
+let installServiceWorker = function(reg){
+  document.getElementById("installUpdate").addEventListener("click", (event)=>{
+    reg.installing.postMessage({install : true});
+  });
+}
+
+let ignoreServieWorker = function(){
+  document.getElementById("ignoreUpdate").addEventListener("click", (event)=>{
+    document.getElementById("notifyUser").style.display = "none";
+  });
+}
+
+let showNotification = function(){
+  document.getElementById("notifyUser").style.display = "";
+  installServiceWorker();
+  ignoreServieWorker();
+}
 
 // Registering a service worker
 if(navigator.serviceWorker){
   navigator.serviceWorker.register("/sw.js", { scope : "/"})
   .then((reg)=>{
-    console.log("Service worker registered");
+
+    // If there is no controller in the serviceWorker property of navigator
+    // That means the page is loaded without the SW
+    // That means the user is in the latest version of the service worker
+    if(!navigator.serviceWorker.controller){
+      console.log("[SW] The page is loaded without a service worker");
+      return;
+    }
+
+    // If a service worker is waiting notify the user. 
+    if(reg.waiting){
+      console.log("[SW] A service worker is waiting ! [reg.waiting]");
+      showNotification();
+      return;
+    }
+
+    if(reg.installing){
+
+      reg.installing.addEventListener("statechange", ()=>{
+        if(reg.installing.state === "installed"){
+          console.log("[SW] A service worker is waiting!")
+        }
+      });
+
+      return;
+    }
+
+
+    // If an update is found in the SW file execute the callback function. 
+    reg.addEventListener("updatefound", ()=>{
+
+      console.log("[SW] An Update is found in the service worker installing the new version ....");
+
+      reg.installing.addEventListener("statechange", ()=>{
+
+        if(reg.installing.state === "installed"){
+          console.log("[SW] A service worker is waiting! [updatefound event]")
+        }
+
+      });
+
+    });
   })
   .catch((error)=>{
     console.log(error);
@@ -240,6 +298,7 @@ let notifyUserHTML = function (){
   let body = document.getElementsByTagName("body")[0];
 
   let outerDiv = document.createElement("div");
+  outerDiv.style.display = "none";
   outerDiv.id = "notifyUser";
 
   let h2 = document.createElement("h2");

@@ -6,7 +6,6 @@ let cacheVersion = cacheName.substr(-2, 2);
 self.addEventListener("install", (event)=>{
   let cacheUrls = [
     `/`,
-    `/data/restaurants.json`,
     `/css/myStyles.css`,
     `/js/main.js`,
     `/js/dbhelper.js`,
@@ -63,6 +62,10 @@ self.addEventListener("activate", (event)=>{
       );
     })
   );
+});
+
+self.addEventListener("message", (event)=>{
+  console.log("[SW] Msg that I got when you click the install button : ", event.data);
 });
 
 console.log("Service Worker File Ended Executing! All the Event Listeners are set.");
