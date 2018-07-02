@@ -1,6 +1,6 @@
 console.log("Service Worker File Starts Executing!");
 
-let cacheName = "restaurant-cache-v1";
+let cacheName = "restaurant-cache-v3";
 let cacheVersion = cacheName.substr(-2, 2);
 
 self.addEventListener("install", (event)=>{
@@ -9,6 +9,8 @@ self.addEventListener("install", (event)=>{
     `/css/myStyles.css`,
     `/js/main.js`,
     `/js/dbhelper.js`,
+    `/data/restaurants.json`,
+    `/restaurant.html`,
     `/js/restaurant_info.js`,
     `https://fonts.googleapis.com/css?family=Roboto`,
     `https://fonts.googleapis.com/css?family=Quicksand`,
@@ -28,6 +30,20 @@ self.addEventListener("install", (event)=>{
 });
 
 self.addEventListener("fetch", (event)=>{
+  if(event.request.url.startsWith("http://localhost:8000/restaurant.html?id=")){
+    console.log(" [CUSTOM RESPONSE] Caching the page skeleton of restaurant");
+
+    return event.respondWith(
+      caches.open(cacheName)
+      .then((cache)=>{
+        return cache.match("/restaurant.html").then((response)=>{
+          return response;
+        });
+      })
+    );
+    
+  }
+
   event.respondWith(
     caches.open(cacheName)
     .then((cache)=>{
@@ -43,6 +59,9 @@ self.addEventListener("fetch", (event)=>{
   );
 });
 
+
+// When the service worker is activated 
+// Delete all the cache that the website uses except the current cache
 self.addEventListener("activate", (event)=>{
   event.waitUntil(
     caches.keys()
@@ -62,10 +81,6 @@ self.addEventListener("activate", (event)=>{
       );
     })
   );
-});
-
-self.addEventListener("message", (event)=>{
-  console.log("[SW] Msg that I got when you click the install button : ", event.data);
 });
 
 console.log("Service Worker File Ended Executing! All the Event Listeners are set.");
