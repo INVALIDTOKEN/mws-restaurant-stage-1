@@ -231,7 +231,7 @@ if(navigator.serviceWorker){
     console.log("[SW] Service worker is registered!");
   })
   .catch((error)=>{
-    console.log(error);
+    console.log("[SW] Error in registering the service worker : ", error);
   });
 }
 

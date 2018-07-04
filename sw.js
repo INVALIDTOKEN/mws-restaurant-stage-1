@@ -1,6 +1,6 @@
 console.log("Service Worker File Starts Executing!");
 
-let cacheName = "restaurant-cache-v3";
+let cacheName = "restaurant-cache-v1";
 let cacheVersion = cacheName.substr(-2, 2);
 
 self.addEventListener("install", (event)=>{
@@ -15,7 +15,7 @@ self.addEventListener("install", (event)=>{
     `https://fonts.googleapis.com/css?family=Roboto`,
     `https://fonts.googleapis.com/css?family=Quicksand`,
     `https://fonts.googleapis.com/css?family=Montserrat`,
-    `https://use.fontawesome.com/releases/v5.1.0/css/all.css`
+    `https://use.fontawesome.com/releases/v5.1.0/css/all.css`,
   ];
   event.waitUntil(
     caches.open(cacheName)
@@ -83,6 +83,6 @@ self.addEventListener("activate", (event)=>{
   );
 });
 
-console.log("Service Worker File Ended Executing! All the Event Listeners are set.");
+console.log("Service Worker File Ended Executing!");
 
 
