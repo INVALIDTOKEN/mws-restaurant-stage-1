@@ -35,12 +35,16 @@
   </header>
 
   <div class="breadcrumb-container">
-    <div class="container">
-      <ul id="breadcrumb">
-        <li><a role="navigation" aria-label="Go Home" href="/">Home</a></li>
-        <li id="separateLinks">/</li>
-      </ul>
-    </div>
+    <nav aria-label="Breadcrumb">
+
+      <div class="container">
+        <ul id="breadcrumb">
+          <li><a role="navigation" aria-label="Go Home" href="/">Home</a></li>
+          <li id="separateLinks">/</li>
+        </ul>
+      </div>
+
+    </nav>
   </div>
 
   <!-- Beginning main -->
@@ -49,14 +53,14 @@
     <div id="grid-container">
 
       <section id="map-container">
-        <div id="map"></div>
+        <div id="map" role="application"></div>
       </section>
       <!-- End map -->
 
       <!-- Beginning restaurant -->
       <section id="restaurant-container">
 
-        <h1 id="restaurant-name"></h1>
+        <h2 id="restaurant-name"></h2>
         <img id="restaurant-img">
         <p id="restaurant-cuisine"></p>
         <p id="restaurant-address"></p>
