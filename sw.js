@@ -1,88 +1,116 @@
-console.log("Service Worker File Starts Executing!");
 
-let cacheName = "restaurant-cache-v1";
-let cacheVersion = cacheName.substr(-2, 2);
+const staticAssets = 'restaurant-cache-v1',
+imagesCache = 'restaurant-images-v1',
+htmlCache = 'restaurant-html-v1',
+restCache = 'restaurant-maps-v1';
 
-self.addEventListener("install", (event)=>{
-  let cacheUrls = [
-    `/`,
-    `/css/myStyles.css`,
-    `/js/main.js`,
-    `/js/dbhelper.js`,
-    `/data/restaurants.json`,
-    `/restaurant.html`,
-    `/js/restaurant_info.js`,
-    `https://fonts.googleapis.com/css?family=Roboto`,
-    `https://fonts.googleapis.com/css?family=Quicksand`,
-    `https://fonts.googleapis.com/css?family=Montserrat`,
-    `https://use.fontawesome.com/releases/v5.1.0/css/all.css`,
-  ];
+
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(cacheName)
-    .then((cache)=>{
-      return cache.addAll(cacheUrls);
-    })
-    .catch((error)=>{
-      console.log(error);
-      return error;
+    caches.open(staticAssets)
+    .then((cache) => {
+      cache.addAll([
+        '/',
+        'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css',
+        'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js',
+        '/css/myStyles.min.css',
+        '/js/dbhelper.min.js',
+        '/js/main.min.js',
+        '/js/restaurant_info.min.js',
+        '/js/idb.min.js'
+      ]);
+    }).catch(() => {
+      console.log('[SW] ERROR IN CACHING STATIC ASSETS');
     })
   );
 });
 
-self.addEventListener("fetch", (event)=>{
-  if(event.request.url.startsWith("http://localhost:8000/restaurant.html?id=")){
-    console.log(" [CUSTOM RESPONSE] Caching the page skeleton of restaurant");
+self.addEventListener('activate', (event) => {
 
-    return event.respondWith(
-      caches.open(cacheName)
-      .then((cache)=>{
-        return cache.match("/restaurant.html").then((response)=>{
-          return response;
-        });
-      })
-    );
-    
+  if (self.clients && clients.claim) {
+    clients.claim();
   }
-
-  event.respondWith(
-    caches.open(cacheName)
-    .then((cache)=>{
-      return cache.match(event.request).then((response)=>{
-        if(response){
-          console.log("Response send by cache box version :", cacheVersion);
-          return response;
-        }
-
-        return fetch(event.request);
-      })
-    })
-  );
-});
-
-
-// When the service worker is activated 
-// Delete all the cache that the website uses except the current cache
-self.addEventListener("activate", (event)=>{
+  
   event.waitUntil(
-    caches.keys()
-    .then((cachesNames)=>{
-      console.log("Name of all cache boxes : ",cachesNames);
-      let array = [];
-      cachesNames.forEach((name)=>{
-        if(name.startsWith("restaurant-cache-") &&  ! name.endsWith(cacheVersion)){
-          array.push(name);
-        }
-      });
-      console.log("Name of all cache boxes that are going to be deleted : ", array);
+
+    caches.keys().then((cacheNames) => {
+
+      // returning a promise
       return Promise.all(
-        array.map((name)=>{
-          return caches.delete(name);
+
+        cacheNames.filter((cacheName) => {
+          return cacheName.startsWith('restaurant-cache-') && cacheName !== staticAssets;
         })
-      );
+        .map((cacheName) => {
+          return caches.delete(cacheName);
+        })
+
+      ).catch((error) => {
+
+        console.log('[SW] [ERROR] SOME ERROR OCCURED WHILE REMOVING CACHE.',  error);
+
+      });
+
+    }).catch((error) => {
+      console.log('[SW] [ERROR] SOME ERROR OCCURED WHILE REMOVING CACHE.' , error);
+    })
+
+  );
+
+
+});
+
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+
+      if(response){
+
+        return response
+
+      }else{
+
+
+        return fetch(event.request)
+        .then((response) => {
+          if (event.request.url.endsWith('.jpg')) {
+
+            return cacheReturnResponse(imagesCache, event.request.url, response.clone());
+
+          } else if (event.request.url.includes('.html')) {
+
+            return cacheReturnResponse(htmlCache, event.request.url, response.clone());
+
+          } else {
+
+            return cacheReturnResponse(restCache, event.request.url, response.clone());
+
+          }
+        }).catch((error) => {
+
+          console.log('[SW] [ERROR] ERROR IN FETCHING REQUEST FROM THE SERVER.');
+
+        });
+
+      }
     })
   );
 });
 
-console.log("Service Worker File Ended Executing!");
+
+// [HELPER FUNCTIONS] ======================================================================================================================
+function cacheReturnResponse(restaurantCacheName, url, response) {
+  // Open cache with the given restaurantCacheName
+  return caches.open(restaurantCacheName)
+    .then((cache) => {
+      // Put data with the corrent key
+      cache.put(url, response.clone());
 
 
+      // return response
+      return response;
+    }).catch((error) => {
+      console.log(`[SW] [ERRO] ERROR OCCURED WHILE STORING RESPONSE IN THE CACHE : ${restaurantCacheName}!`);
+    });
+}

@@ -8,27 +8,89 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
   }
 
   /**
    * Fetch all restaurants.
    */
+
+  static getIDB(){
+    // returns a promise
+    return idb.open("restaurant-app", 1, (upgradeDB)=>{
+      let restaurantStore = upgradeDB.createObjectStore("allRestaurants");
+    });
+  }
+
+  static restaurantFromIDB(dbPromise){
+    return dbPromise.then((db)=>{
+      let tx = db.transaction("allRestaurants");
+      var keyValStore = tx.objectStore("allRestaurants");
+      return keyValStore.get("restaurantArray");
+    });
+  }
+
+  static updateIDB(restaurantArray, dbPromise) {
+    return dbPromise.then(function (db) {
+      let tx = db.transaction('allRestaurants', 'readwrite');
+      let restaurantsStore = tx.objectStore('allRestaurants');
+      restaurantsStore.put(restaurantArray, 'restaurantArray');
+      tx.complete;
+    });
+  }
+
+
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
+    let IDBPromise = DBHelper.getIDB();
+    DBHelper.restaurantFromIDB(IDBPromise)
+    .then((restaurantArr)=>{
+      console.log("[IDB] THE VALUE OF 'restaurantArr' : ");
+      console.log(restaurantArr);
+
+
+      if(!restaurantArr){
+        
+        console.log("[FETCH] RESPONSE MADE FROM SERVER");
+        return fetch(DBHelper.DATABASE_URL);
+
+      }else if(restaurantArr && restaurantArr.length > 0){
+
+        console.log("[IDB] RESPONSE MADE FROM INDEXDB");
+        callback(null, restaurantArr);
+        return;
+
       }
-    };
-    xhr.send();
+
+    })
+    .then((response)=>{
+      console.log(response);
+
+      if(typeof response == "undefined"){
+        return;
+      }else if(response.status != 200){
+        return;
+      }else{
+        return response.json();
+      }
+
+    })
+    .then((restaurantArr)=>{
+
+      if(typeof restaurantArr == "undefined"){
+        return;
+      }else{
+        console.log("[IDB] UPDATING RESPONSE IN THE DATABASE");
+        let lastObj = restaurantArr[restaurantArr.length - 1];
+        lastObj.photograph = "" + lastObj.id; 
+
+
+        DBHelper.updateIDB(restaurantArr, IDBPromise);
+        callback(null, restaurantArr);
+        return;
+      }
+
+    });
   }
 
   /**
@@ -150,7 +212,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}.jpg`);
   }
 
   /**

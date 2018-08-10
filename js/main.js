@@ -180,8 +180,8 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  more.setAttribute("role", "To see Restaurant Details"); 
-  more.setAttribute("aria-label", "Read more about the " + restaurant.name);
+  // more.setAttribute("role", "To see Restaurant Details"); 
+  // more.setAttribute("aria-label", "Read more about the " + restaurant.name);
   li.append(more);
 
   // [ADDED]
@@ -240,53 +240,53 @@ if(navigator.serviceWorker){
 
 // Adding a UI element for notificying the user that an update is available.
 // Not used for Project-1
-let notifyUserHTML = function (){
-  let body = document.getElementsByTagName("body")[0];
+// let notifyUserHTML = function (){
+//   let body = document.getElementsByTagName("body")[0];
 
-  let outerDiv = document.createElement("div");
-  outerDiv.id = "notifyUser";
+//   let outerDiv = document.createElement("div");
+//   outerDiv.id = "notifyUser";
 
-  let h2 = document.createElement("h2");
-  h2.textContent = "Update Available";
-  h2.id = "notifyMsg"
+//   let h2 = document.createElement("h2");
+//   h2.textContent = "Update Available";
+//   h2.id = "notifyMsg"
 
-  outerDiv.appendChild(h2);
+//   outerDiv.appendChild(h2);
 
-  let ignoreButton = document.createElement("button");
-  ignoreButton.type = "button";
-  ignoreButton.id = "ignoreUpdate";
-  ignoreButton.textContent = "Ignore";
+//   let ignoreButton = document.createElement("button");
+//   ignoreButton.type = "button";
+//   ignoreButton.id = "ignoreUpdate";
+//   ignoreButton.textContent = "Ignore";
 
-  let installButton = document.createElement("button");
-  installButton.type = "button";
-  installButton.id = "installUpdate";
-  installButton.textContent = "Install";
+//   let installButton = document.createElement("button");
+//   installButton.type = "button";
+//   installButton.id = "installUpdate";
+//   installButton.textContent = "Install";
 
-  let innerDiv = document.createElement("div");
-  innerDiv.id = "notifyButtons"
-  innerDiv.appendChild(ignoreButton);
-  innerDiv.appendChild(installButton);
+//   let innerDiv = document.createElement("div");
+//   innerDiv.id = "notifyButtons"
+//   innerDiv.appendChild(ignoreButton);
+//   innerDiv.appendChild(installButton);
 
-  outerDiv.appendChild(innerDiv);
+//   outerDiv.appendChild(innerDiv);
 
-  body.appendChild(outerDiv);
-}
+//   body.appendChild(outerDiv);
+// }
 
-let installServiceWorker = function(reg){
-  document.getElementById("installUpdate").addEventListener("click", (event)=>{
-    reg.installing.postMessage({install : true});
-  });
-}
+// let installServiceWorker = function(reg){
+//   document.getElementById("installUpdate").addEventListener("click", (event)=>{
+//     reg.installing.postMessage({install : true});
+//   });
+// }
 
-let ignoreServieWorker = function(){
-  document.getElementById("ignoreUpdate").addEventListener("click", (event)=>{
-    document.getElementById("notifyUser").style.display = "none";
-  });
-}
+// let ignoreServieWorker = function(){
+//   document.getElementById("ignoreUpdate").addEventListener("click", (event)=>{
+//     document.getElementById("notifyUser").style.display = "none";
+//   });
+// }
 
-let showNotification = function(){
-  document.getElementById("notifyUser").style.display = "";
-  installServiceWorker();
-  ignoreServieWorker();
-}
+// let showNotification = function(){
+//   document.getElementById("notifyUser").style.display = "";
+//   installServiceWorker();
+//   ignoreServieWorker();
+// }
 
