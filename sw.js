@@ -1,7 +1,6 @@
 
 const staticAssets = 'restaurant-cache-v1',
 imagesCache = 'restaurant-images-v1',
-htmlCache = 'restaurant-html-v1',
 restCache = 'restaurant-maps-v1';
 
 
@@ -12,6 +11,7 @@ self.addEventListener('install', (event) => {
     .then((cache) => {
       cache.addAll([
         '/',
+        '/restaurant.html',
         'https://unpkg.com/leaflet@1.3.1/dist/leaflet.css',
         'https://unpkg.com/leaflet@1.3.1/dist/leaflet.js',
         '/css/myStyles.min.css',
@@ -62,6 +62,20 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  if(event.request.url.startsWith("http://localhost:8000/restaurant.html?id=")){
+    console.log(" [CUSTOM RESPONSE] Caching the page skeleton of restaurant");
+
+    return event.respondWith(
+      caches.open(staticAssets)
+      .then((cache)=>{
+        return cache.match("/restaurant.html").then((response)=>{
+          return response;
+        });
+      })
+    );
+    
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
 
@@ -77,10 +91,6 @@ self.addEventListener('fetch', (event) => {
           if (event.request.url.endsWith('.jpg')) {
 
             return cacheReturnResponse(imagesCache, event.request.url, response.clone());
-
-          } else if (event.request.url.includes('.html')) {
-
-            return cacheReturnResponse(htmlCache, event.request.url, response.clone());
 
           } else {
 

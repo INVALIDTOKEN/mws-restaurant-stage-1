@@ -156,9 +156,9 @@ header a{
 
 #restaurants-list p{
   padding: 0 15px;
-  color: rgba(0, 0, 0, 0.8);
   font-size: 14px;
-  color:#808080;
+  color:#FF5722;
+  font-weight: bold;
 }
 
 /* GIVING A LINK BUTTON STYLES */
