@@ -1,6 +1,54 @@
 /**
  * Common database helper functions.
  */
+
+let syncRestaurantReview = [];
+let syncRestaurantRating = [];
+
+window.addEventListener("online", ()=>{
+  if(syncRestaurantRating.length > 0){
+    syncRatings();
+  }
+
+  if(syncRestaurantReview.length > 0){
+    syncReviews();
+  }
+});
+
+function syncReviews(){
+  console.log("We are again online.");
+  console.log("Length of array is = " + syncRestaurantReview.length);
+  let promiseArr = [];
+  syncRestaurantReview.forEach((eachReq)=>{
+    fetch(eachReq.url, {
+      method : eachReq.method,
+      body : eachReq.body
+    })
+  });
+  Promise.all(promiseArr)
+  .then((values)=>{
+    syncRestaurantRating = [];
+    alert("All the Reviews are synced with the data base.");
+  });
+}
+
+function syncRatings(){
+  console.log("We are again online.");
+  console.log("Length of array is = " + syncRestaurantRating.length);
+  let promiseArr = [];
+  syncRestaurantRating.forEach((eachReq)=>{
+    promiseArr.push(fetch(eachReq.url, {
+      method : eachReq.method
+    }));
+  });
+  Promise.all(promiseArr)
+  .then((values)=>{
+    syncRestaurantRating = [];
+    alert("All the favourites are synced with the data base.");
+  });
+}
+
+
 class DBHelper {
 
   /**
@@ -12,16 +60,100 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
-  /**
-   * Fetch all restaurants.
-   */
-
   static getIDB(){
     // returns a promise
     return idb.open("restaurant-app", 1, (upgradeDB)=>{
-      let restaurantStore = upgradeDB.createObjectStore("allRestaurants");
+      switch (upgradeDB.oldVersion) {
+        case 0:
+          upgradeDB.createObjectStore('allRestaurants');
+        case 1:
+          upgradeDB.createObjectStore('reviews');
+      }
     });
   }
+
+  /**
+  * Fetch reviews by restaurant ID using cache first or network first strategies with fallback.
+  */
+  static getReviewsByRestaurantFromDb(dbPromise, restaurantId) {
+    console.log("getReviewsByRestaurantFromDb called with restaurantId " + restaurantId);
+    return dbPromise.then((db) => {
+      if (!db) return;
+      let tx = db.transaction('reviews');
+      let reviewsStore = tx.objectStore('reviews');
+      return reviewsStore.get((restaurantId));
+    });
+  }
+
+  /**
+  * Update reviews to reviews db.
+  */
+  static updateReviewsByRestaurantInDb(dbPromise, restaurantId, reviews) {
+    return dbPromise.then((db) => {
+      if (!db) return;
+      let tx = db.transaction('reviews', 'readwrite');
+      let reviewsStore = tx.objectStore('reviews');
+      reviewsStore.put(reviews, restaurantId);
+      tx.complete;
+    });
+  }
+
+  /**
+  * Update IndexedDB with latest review before going online.
+  */
+  static postReviewToDB(review) {
+    console.log("postReviewToDB called");
+    const dbPromise = DBHelper.getIDB();
+
+    DBHelper.getReviewsByRestaurantFromDb(dbPromise, review.restaurant_id)
+      .then(reviews => {
+        console.log("The reviews are ...");
+        console.log(reviews);
+        if (!reviews){
+          return;
+        };
+        reviews.push(review);
+        DBHelper.updateReviewsByRestaurantInDb(dbPromise, (review.restaurant_id), reviews);
+      });
+  }
+
+  /**
+  * Fetch all reviews of a particular restaurant.
+  */
+  static fetchRestaurantReviewsById(restaurantId) {
+    const reviewsUrl = `http://localhost:1337/reviews/?restaurant_id=${restaurantId}`;
+    const dbPromise = DBHelper.getIDB();
+
+    // Network then cache strategy - reviews.
+    return DBHelper.getReviewsByRestaurantFromDb(dbPromise, restaurantId)
+      .then(reviews => {
+        if (reviews && reviews.length > 0) {
+          
+          // Reviews present in the index db
+          return reviews;
+
+        } else {
+
+          // Fetch reviews from network.
+          return fetch(reviewsUrl)
+            .then(response => response.json())
+            .then(reviews => {
+              if (!reviews || (reviews && reviews.length === 0)) return;
+              DBHelper.updateReviewsByRestaurantInDb(dbPromise, restaurantId, reviews);
+              return reviews;
+            });
+
+        }
+      }).catch((error) => {
+        // Oops!. Got an error from server or some error while operations!
+        console.log(`Request failed with error: ${error}`);
+      });
+
+  }
+
+  /**
+   * Fetch all restaurants.
+   */
 
   static restaurantFromIDB(dbPromise){
     return dbPromise.then((db)=>{

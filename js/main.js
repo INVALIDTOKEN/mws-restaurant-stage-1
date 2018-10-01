@@ -1,9 +1,81 @@
 console.log("main.js Started Running.");
+
 let restaurants,
   neighborhoods,
   cuisines;
 var newMap;
 var markers = [];
+
+function setFavRestaurants(restaurant, event){
+  let restaurantId = restaurant.id;
+  let getFav = event.target.getAttribute("isFav");
+  let favValue = false;
+  if(getFav == "false"){
+    
+    console.log("isFav == false");
+    event.target.setAttribute("isFav", "true");
+    event.target.style.backgroundColor = "#079642";
+    console.log("... now isFav == true");
+    favValue = true;
+  }else{
+    console.log("isFav == true");
+    event.target.setAttribute("isFav", "false");
+    event.target.style.backgroundColor = "white";
+    console.log("... now isFav == false");
+    favValue = false;
+  }
+
+  if(favValue == true){
+    var url = `http://localhost:1337/restaurants/${restaurantId}/?is_favorite=true`;
+  }else{
+    var url = `http://localhost:1337/restaurants/${restaurantId}/?is_favorite=false`;
+  }
+
+  // fetch the network
+  if(navigator.onLine){
+    console.log("we are online");
+    fetch(url, {
+      method : "PUT"
+    })
+    .then((response)=>{
+      if(response.ok){
+        console.log("Changes done on the server.");
+        console.log(response);
+      }
+    })
+    .catch((error)=>{
+      console.log("Error in making changes on the server");
+
+      syncRestaurantRating.push({
+        url, method : "PUT"
+      });
+      alert("We are currently offline your favourites are synced as soon as you go online.");
+    });
+
+  }else{
+    // [TODO ADD OFFLINE FEATURE]
+    console.log("we are offline");
+    
+    syncRestaurantRating.push({
+      url, method : "PUT"
+    });
+    
+    alert("We are currently offline your favourites are synced as soon as you go online.");
+  }
+
+  // change in the idb
+  let allRestaurant = DBHelper.fetchRestaurants((error, restaurants)=>{
+    restaurants.forEach((eachRestaurant)=>{
+      
+      if(eachRestaurant.id == restaurantId){
+        eachRestaurant["is_favorite"] = favValue;
+      }
+
+      DBHelper.updateIDB(restaurants, DBHelper.getIDB());
+    });
+  });
+}
+
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -158,6 +230,30 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
+  
+  const addFav = document.createElement("i");
+  addFav.id = "addFav" + restaurant.id;
+  addFav.className = "far fa-star addFav";
+  addFav.setAttribute("aria-label", `Add ${restaurant.name} to favourites.`);
+  addFav.setAttribute("isFav", "false");
+  addFav.style.color = "black";
+
+  if(restaurant["is_favorite"] == true || restaurant["is_favorite"] == "true"){
+    addFav.setAttribute("isFav", "true");
+    addFav.style.backgroundColor = "#079642";  
+  }
+
+  addFav.addEventListener("click", (event)=>{
+    setFavRestaurants(restaurant, event);
+  });
+
+  const addFavDiv = document.createElement("div");
+  addFavDiv.id = "addFavDiv" + restaurant.id;
+  addFavDiv.className = "addFavDiv";
+  addFavDiv.appendChild(addFav);
+  li.appendChild(addFavDiv);
+
+  
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
@@ -226,7 +322,7 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 } */
 
-// Registering a service worker
+//Registering a service worker
 if(navigator.serviceWorker){
   navigator.serviceWorker.register("/sw.js", { scope : "/"})
   .then((reg)=>{

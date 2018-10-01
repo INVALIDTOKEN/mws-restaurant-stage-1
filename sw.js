@@ -76,6 +76,10 @@ self.addEventListener('fetch', (event) => {
     
   }
 
+  if(event.request.method == "PUT"){
+    return event.respondWith(fetch(event.request));
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
 
@@ -95,7 +99,7 @@ self.addEventListener('fetch', (event) => {
           } else {
 
             return cacheReturnResponse(restCache, event.request.url, response.clone());
-
+          
           }
         }).catch((error) => {
 
@@ -115,6 +119,10 @@ function cacheReturnResponse(restaurantCacheName, url, response) {
   return caches.open(restaurantCacheName)
     .then((cache) => {
       // Put data with the corrent key
+
+      if(response["Content-Type"] == "application/json"){
+        console.log("Json found");
+      }
       cache.put(url, response.clone());
 
 

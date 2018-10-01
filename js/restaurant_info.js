@@ -1,6 +1,6 @@
 let restaurant;
 var newMap;
-
+let reviewList = undefined;
 /**
  * Initialize map as soon as the page is loaded.
  */
@@ -125,24 +125,117 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = () => {
   const container = document.getElementById('reviews-container');
+  const ul = document.getElementById('reviews-list');
+  reviewList = ul;
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
-  if (!reviews) {
-    const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
-    return;
-  }
-  const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
+
+  DBHelper.fetchRestaurantReviewsById(self.restaurant.id)
+  .then((reviews)=>{
+    console.log(reviews);
+
+    if (!reviews) {
+      const noReviews = document.createElement('p');
+      noReviews.innerHTML = 'No reviews yet!';
+      container.appendChild(noReviews);
+      return;
+    }else{
+      reviews.forEach(review => {
+        ul.appendChild(createReviewHTML(review));
+      });
+      container.appendChild(ul);
+    }
   });
-  container.appendChild(ul);
 }
+
+let submitReviewForm = document.getElementsByClassName("submitReviewForm")[0];
+let reviewerName = document.getElementById("reviewerName");
+let reviewerRating = document.getElementById("reviewerRating");
+let reviewerReview = document.getElementById("reviewerReview");
+
+reviewerRating.addEventListener("input", (event)=>{
+  let intValue = parseInt(reviewerRating.value);
+  if(intValue > 5){
+    reviewerRating.value = 5;
+  }else if(intValue < 0){
+    reviewerRating.value = 0;
+  }
+});
+
+submitReviewForm.addEventListener("submit", (event)=>{
+  event.preventDefault();
+  if(reviewerName.value != "" && reviewerReview.value != "" && reviewerRating.value != ""){
+    let rating = reviewerRating.value;
+    let name = reviewerName.value;
+    let comments = reviewerReview.value;
+
+    let params = (new URL(document.location)).searchParams;
+    let currentId = params.get("id");
+    let restaurantId = parseInt(currentId);
+    let date = new Date();
+    let finalObj = {"restaurant_id" : restaurantId, name, rating, comments, createdAt : date.getTime()};
+    saveAllData(finalObj);
+    console.log(finalObj);
+    reviewerRating.value = "";
+    reviewerName.value = "";
+    reviewerReview.value = "";
+  }else{
+    alert("Please fill the complete form with current name and review.");
+  }
+  
+});
+
+function saveAllData(finalObj){
+  let url = `http://localhost:1337/reviews/`;
+  if(navigator.onLine){
+    console.log("We are online.");
+    fetch(url, {
+      method : "POST",
+      body : JSON.stringify(finalObj)
+    })
+    .then((response)=>{
+      if(response.ok){
+        console.log("Review saved to the server.");
+        console.log(response);
+      }else{
+        syncRestaurantReview.push({
+          url : url,
+          method : "POST",
+          body : JSON.stringify(finalObj)
+        });
+      }
+    })
+    .catch((erro)=>{
+      console.log("[ERROR] Error in fetch request.");
+      syncRestaurantReview.push({
+        url : url,
+        method : "POST",
+        body : JSON.stringify(finalObj)
+      });
+    });
+  }else{
+
+    console.log("We are offline.");
+    syncRestaurantReview.push({
+      url : url,
+      method : "POST",
+      body : JSON.stringify(finalObj)
+    });
+
+    alert("You are currently offline, the review is synced as soon as you are online.");
+  }
+
+  // update current database
+  DBHelper.postReviewToDB(finalObj);
+  // append to list
+  reviewList.appendChild(createReviewHTML(finalObj));
+
+}
+console.log(submitReviewForm);
 
 /**
  * Create review HTML and add it to the webpage.
@@ -154,7 +247,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = review.createdAt;
   li.appendChild(date);
 
   const rating = document.createElement('p');

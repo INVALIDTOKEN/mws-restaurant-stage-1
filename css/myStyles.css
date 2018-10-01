@@ -33,7 +33,7 @@ body,td,th{
 }
 
 /* You can delete this after completing the page */
-h1, p, h2, h3, ul{
+h1, p, h2, h3, ul, h4{
   margin: 0px;
   padding: 0px;
 }
@@ -131,6 +131,7 @@ header a{
 
 #restaurants-list li{
   background-color:  #ffffff;
+  position: relative;
 
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   border: 0.5px solid rgba(0,0,0,0.2);
@@ -186,6 +187,23 @@ header a{
 #restaurants-list a:hover{
   background-color: #079642;
   color: white;
+}
+
+/* =======================================
+============= ADD fav =====================
+======================================*/
+
+.addFavDiv{
+  position : absolute;
+  top: 75%;
+  right: 1%;
+}
+
+.addFavDiv .addFav{
+  border-radius: 50%;
+  border : 1px solid black;
+  padding : 2px;
+  font-size: 22px;
 }
 
 /* ================================
@@ -433,6 +451,79 @@ li#separateLinks{
   box-shadow : 0 0 10px 5px rgba(213,0,0, 0.5);
 }
 
+/* =====================================
+========== Review Form Styles ==========
+=======================================*/
+
+textarea{
+  display: block;
+  width: 100%;
+  padding: 5px;
+}
+
+.submitReview{
+  width: 96%;
+  margin: auto;
+}
+
+.writeAReview{
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  font-size: 25px;
+  border-bottom: 3px solid coral;
+}
+
+.submitReviewForm{
+  display: flex;
+  flex-direction: column;
+}
+
+.submitReviewForm div{
+  margin-bottom: 5px;
+}
+
+.submitReviewForm button{
+  border: 0px;
+  padding: 5px;
+  width: 100px;
+  background-color: #079642;
+  color: white;
+  font-size: 18px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.submitReviewForm label{
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.submitReviewForm label{
+  font-size: 20px;
+}
+
+#reviewerName{
+  padding: 5px;
+  width: 140px;
+}
+
+#reviewerRating{
+  padding: 5px;
+  width: 100px;
+}
+
+.nameAndRating{
+  display: flex;
+}
+
+.nameAndRating > div{
+  margin-right: 20px;
+}
+
 /* ================================
 ========== Media queries ==========
 =================================*/
@@ -488,7 +579,7 @@ li#separateLinks{
   #restaurants-list{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 5px 5px;
+    grid-gap: 15px 15px;
   }
 
   /* restaurant route styles */
@@ -513,10 +604,6 @@ li#separateLinks{
   .container{
     width: 93%;
     margin: 0 auto;
-  }
-
-  #restaurants-list{
-    grid-gap: 10px 10px;
   }
 
   #footer{
@@ -574,7 +661,6 @@ li#separateLinks{
   #restaurants-list{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 10px 10px;
   }
 
   /* restaurant route styles */
@@ -588,12 +674,6 @@ li#separateLinks{
 }
 
 @media screen and (min-width : 1120px){
-
-  /* =========== Increasing the width of the gutters in the restaurants grid=========== */
-  #restaurants-list{
-    grid-gap: 20px 15px;
-    padding: 10px; 
-  }
 
   /* restaurant route styles */
   #grid-container{
